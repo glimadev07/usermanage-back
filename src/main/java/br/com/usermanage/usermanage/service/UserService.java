@@ -7,6 +7,8 @@ import br.com.usermanage.usermanage.entity.User;
 import br.com.usermanage.usermanage.repository.UserRepository;
 import java.util.List;
 import java.util.Optional;
+import java.time.LocalDateTime;
+
 
 
 
@@ -25,8 +27,13 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public Optional<User> getUsuarioById(Long id) {
+    public Optional<User> getUserById(Long id) {
         return userRepository.findById(id);
+    }
+
+    public User createUser(User user) {
+        user.setDataCriacao(LocalDateTime.now());
+        return userRepository.save(user);
     }
     
 }
