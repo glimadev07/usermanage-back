@@ -35,5 +35,17 @@ public class UserService {
         user.setDataCriacao(LocalDateTime.now());
         return userRepository.save(user);
     }
+
+    public User updateUser(Long id, User userDetails) {
+        User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+        user.setNome(userDetails.getNome());
+        user.setUsername(userDetails.getUsername());
+        user.setEmail(userDetails.getEmail());
+        user.setSenha(userDetails.getSenha());
+        user.setAtivo(userDetails.isAtivo());
+        user.setTelefone(userDetails.getTelefone());
+        user.setEndereco(userDetails.getEndereco());
+        return userRepository.save(user);
+    }
     
 }

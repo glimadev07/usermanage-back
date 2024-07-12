@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import br.com.usermanage.usermanage.entity.User;
@@ -39,4 +40,9 @@ public class UserController {
         return usuarioService.createUser(usuario);
     }
 
+
+    @PutMapping("/{id}")
+    public ResponseEntity<User> updateUsuario(@PathVariable Long id, @RequestBody User usuarioDetails) {
+        return ResponseEntity.ok(usuarioService.updateUser(id, usuarioDetails));
+    }
 }
