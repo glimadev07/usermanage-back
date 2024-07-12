@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 @Builder
 @Data
 @Entity
-@Table(name = "TW003_", schema = "DBAWMS")
+@Table(name = "usuarios")
 public class User {
 
     @Id
