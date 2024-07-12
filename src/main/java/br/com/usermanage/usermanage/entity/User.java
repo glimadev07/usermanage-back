@@ -6,9 +6,19 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Data
 @Entity
-@Table(name = "usuarios")
+@Table(name = "TW003_", schema = "DBAWMS")
 public class User {
 
     @Id
@@ -26,6 +36,9 @@ public class User {
 
     @Column(nullable = false)
     private String senha;
+
+    @Column(nullable = false)
+    private LocalDateTime dataCriacao;
 
     @Column(nullable = false)
     private boolean ativo;
