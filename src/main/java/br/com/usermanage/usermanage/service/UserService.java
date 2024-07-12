@@ -47,5 +47,9 @@ public class UserService {
         user.setEndereco(userDetails.getEndereco());
         return userRepository.save(user);
     }
+
+    public void deleteUsuario(Long id) {
+        userRepository.deleteById(id);
+    }
     
 }
