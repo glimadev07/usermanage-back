@@ -2,6 +2,7 @@ package br.com.usermanage.usermanage.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import br.com.usermanage.usermanage.entity.User;
 import br.com.usermanage.usermanage.repository.UserRepository;
@@ -12,44 +13,21 @@ import java.time.LocalDateTime;
 
 
 
+/**
+ * @author gilberto.lima
+ */
 @Service
-public class UserService {
+public interface UserService {
 
 
-    private UserRepository userRepository;
+    public List<User> getAllUsers();
 
-    public UserService(UserRepository userRepository){
-        this.userRepository = userRepository;
-    }
+    public Optional<User> getUserById(Long id);
 
+    public User updateUser(Long id, User userDetails);
 
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
-    }
+    public void deleteUsuario(Long id);
 
-    public Optional<User> getUserById(Long id) {
-        return userRepository.findById(id);
-    }
-
-    public User createUser(User user) {
-        user.setDataCriacao(LocalDateTime.now());
-        return userRepository.save(user);
-    }
-
-    public User updateUser(Long id, User userDetails) {
-        User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
-        user.setNome(userDetails.getNome());
-        user.setUsername(userDetails.getUsername());
-        user.setEmail(userDetails.getEmail());
-        user.setSenha(userDetails.getSenha());
-        user.setAtivo(userDetails.isAtivo());
-        user.setTelefone(userDetails.getTelefone());
-        user.setEndereco(userDetails.getEndereco());
-        return userRepository.save(user);
-    }
-
-    public void deleteUsuario(Long id) {
-        userRepository.deleteById(id);
-    }
+    public User createUser(User user) ;
     
 }
