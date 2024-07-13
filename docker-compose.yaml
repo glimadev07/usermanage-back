@@ -1,0 +1,22 @@
+services:
+  db:
+    container_name: usermanage-db
+    environment:
+      - POSTGRES_PASSWORD=7ujmm,./
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=postgres
+    image: postgres:15.3
+    hostname: db
+    ports:
+      - "5433:5432"
+    restart: always
+    volumes:
+      - /var/lib/docker/volumes/usermanage_db:/var/lib/postgresql/data
+
+  adminer:
+    container_name: usermanage-adminer
+    hostname: adminer
+    image: adminer
+    restart: always
+    ports:
+      - "8081:8080"
