@@ -24,9 +24,9 @@ public interface UserService {
 
     public Optional<User> getUserById(Long id);
 
-    public User updateUser(Long id, User userDetails);
+    public String updateUser(Long id, User userDetails);
 
-    public void deleteUsuario(Long id);
+    public String deleteUsuario(Long id);
 
     public User createUser(User user) ;
     

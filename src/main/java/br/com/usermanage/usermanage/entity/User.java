@@ -49,4 +49,7 @@ public class User {
     @Column(length = 255)
     private String endereco;
 
+    @Column(length = 255)
+    private String role;
+
 }

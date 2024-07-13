@@ -4,16 +4,23 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.usermanage.usermanage.entity.User;
+import br.com.usermanage.usermanage.exception.UserNotFoundException;
 import br.com.usermanage.usermanage.repository.UserRepository;
+
+/**
+* @author gilberto.lima
+*/
 
 @Service
 public class UserServiceImpl implements UserService {
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
+    @Autowired
     public UserServiceImpl(UserRepository userRepository){
         this.userRepository = userRepository;
     }
@@ -35,8 +42,26 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User updateUser(Long id, User userDetails) {
-        User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+    public String updateUser(Long id, User userDetails) {
+        User user = findUserById(id);
+        updateUserData(user, userDetails);
+        userRepository.save(user);
+        return "Usuário " + id + " atualizado com sucesso";
+    }
+
+    @Override
+    public String deleteUsuario(Long id) {
+        findUserById(id);
+        userRepository.deleteById(id);
+        return "Usuário " + id + " deletado com sucesso";
+    }
+
+    private User findUserById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("Usuário não encontrado"));
+    }
+
+    private void updateUserData(User user, User userDetails) {
         user.setNome(userDetails.getNome());
         user.setUsername(userDetails.getUsername());
         user.setEmail(userDetails.getEmail());
@@ -44,12 +69,5 @@ public class UserServiceImpl implements UserService {
         user.setAtivo(userDetails.isAtivo());
         user.setTelefone(userDetails.getTelefone());
         user.setEndereco(userDetails.getEndereco());
-        return userRepository.save(user);
     }
-
-    @Override
-    public void deleteUsuario(Long id) {
-        userRepository.deleteById(id);
-    }
-
 }

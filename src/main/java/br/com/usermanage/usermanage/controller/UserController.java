@@ -1,6 +1,7 @@
 package br.com.usermanage.usermanage.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -10,16 +11,22 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.usermanage.usermanage.entity.User;
+import br.com.usermanage.usermanage.response.Response;
 import br.com.usermanage.usermanage.service.UserService;
 
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * @author gilberto.lima
+ */
+
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api/v1/users")
 public class UserController {
 
     private UserService userService;
@@ -29,29 +36,61 @@ public class UserController {
     }
 
     @GetMapping
-    public List<User> getAllUsuarios() {
-        return userService.getAllUsers();
+    public ResponseEntity<Response<List<User>>> getAllUsuarios() {
+        try {
+            List<User> users = userService.getAllUsers();
+            return Response.successResponse(users);
+        } catch (Exception e) {
+            return Response.errorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), HttpStatus.INTERNAL_SERVER_ERROR,
+                    e.getMessage());
+        }
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable Long id) {
-        Optional<User> usuario = userService.getUserById(id);
-        return usuario.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<Response<User>> getUserById(@PathVariable Long id) {
+        try {
+            Optional<User> usuario = userService.getUserById(id);
+            return usuario.map(Response::successResponse)
+                    .orElseGet(() -> Response.errorResponse(HttpStatus.NOT_FOUND.value(), HttpStatus.NOT_FOUND,
+                            "Usuário não encontrado"));
+        } catch (Exception e) {
+            return Response.errorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), HttpStatus.INTERNAL_SERVER_ERROR,
+                    e.getMessage());
+        }
     }
 
     @PostMapping
-    public User createUsuario(@RequestBody User usuario) {
-        return userService.createUser(usuario);
+    public ResponseEntity<Response<User>> createUsuario(@RequestBody User usuario) {
+        try {
+            User createdUser = userService.createUser(usuario);
+            return Response.successResponse(createdUser);
+        } catch (Exception e) {
+            return Response.errorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), HttpStatus.INTERNAL_SERVER_ERROR,
+                    e.getMessage());
+        }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<User> updateUsuario(@PathVariable Long id, @RequestBody User usuarioDetails) {
-        return ResponseEntity.ok(userService.updateUser(id, usuarioDetails));
+    public ResponseEntity<Response<String>> updateUsuario(@PathVariable Long id, @RequestBody User usuarioDetails) {
+        try {
+            String result = userService.updateUser(id, usuarioDetails);
+            return Response.successResponse(result);
+        } catch (Exception e) {
+            return Response.errorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), HttpStatus.INTERNAL_SERVER_ERROR,
+                    e.getMessage());
+
+        }
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUsuario(@PathVariable Long id) {
-        userService.deleteUsuario(id);
-        return ResponseEntity.noContent().build();
+    @DeleteMapping("/users/{id}")
+    public ResponseEntity<Response<String>> deleteUsuario(@PathVariable Long id) {
+        try {
+            String result = userService.deleteUsuario(id);
+            return Response.successResponse(result);
+        } catch (Exception e) {
+            return Response.errorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), HttpStatus.INTERNAL_SERVER_ERROR,
+                    e.getMessage());
+        }
     }
+
 }
