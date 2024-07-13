@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import br.com.usermanage.usermanage.entity.User;
 import br.com.usermanage.usermanage.service.UserService;
@@ -16,18 +18,21 @@ import br.com.usermanage.usermanage.service.UserService;
 import java.util.List;
 import java.util.Optional;
 
-@Controller
+@RestController
+@RequestMapping("/api/users")
 public class UserController {
 
     private UserService userService;
 
     public UserController(UserService userService) {
-        this.userService = this.userService;
+        this.userService = userService;
     }
 
     @GetMapping
-    public List<User> getAllUsuarios() {
-        return userService.getAllUsers();
+    public ResponseEntity<List<User>> getAllUsers() {
+        // Lógica para buscar todos os usuários do banco de dados
+        List<User> users = userService.getAllUsers();
+        return ResponseEntity.ok(users);
     }
 
     @GetMapping("/{id}")
