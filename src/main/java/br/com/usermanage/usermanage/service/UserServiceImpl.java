@@ -1,7 +1,6 @@
 package br.com.usermanage.usermanage.service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +11,8 @@ import br.com.usermanage.usermanage.dto.LoginRequestDTO;
 import br.com.usermanage.usermanage.entity.User;
 import br.com.usermanage.usermanage.exception.UserNotFoundException;
 import br.com.usermanage.usermanage.repository.UserRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 /**
  * @author gilberto.lima
@@ -30,21 +31,14 @@ public class UserServiceImpl implements UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    @Override
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public Page<User> getAllUsers(Pageable pageable) {
+        return userRepository.findAll(pageable);
     }
 
     @Override
     public Optional<User> getUserById(Long id) {
         return userRepository.findById(id);
     }
-
-    // @Override
-    // public User createUser(User user) {
-    // user.setDataCriacao(LocalDateTime.now());
-    // return userRepository.save(user);
-    // }
 
     @Override
     public User createUser(User user) {

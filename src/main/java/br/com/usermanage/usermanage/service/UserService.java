@@ -1,18 +1,12 @@
 package br.com.usermanage.usermanage.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import br.com.usermanage.usermanage.dto.LoginRequestDTO;
 import br.com.usermanage.usermanage.entity.User;
-import br.com.usermanage.usermanage.repository.UserRepository;
-import java.util.List;
 import java.util.Optional;
-import java.time.LocalDateTime;
-
-
-
 
 /**
  * @author gilberto.lima
@@ -20,8 +14,7 @@ import java.time.LocalDateTime;
 @Service
 public interface UserService {
 
-
-    public List<User> getAllUsers();
+    public Page<User> getAllUsers(Pageable pageable);
 
     public Optional<User> getUserById(Long id);
 
@@ -31,5 +24,5 @@ public interface UserService {
 
     public User createUser(User user);
 
-    public Optional<User> loginUser(LoginRequestDTO loginRequest);    
+    public Optional<User> loginUser(LoginRequestDTO loginRequest);
 }
