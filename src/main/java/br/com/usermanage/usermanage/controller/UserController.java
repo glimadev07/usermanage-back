@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.usermanage.usermanage.dto.LoginRequestDTO;
 import br.com.usermanage.usermanage.entity.User;
 import br.com.usermanage.usermanage.response.Response;
 import br.com.usermanage.usermanage.service.UserService;
@@ -87,6 +88,19 @@ public class UserController {
         try {
             String result = userService.deleteUsuario(id);
             return Response.successResponse(result);
+        } catch (Exception e) {
+            return Response.errorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), HttpStatus.INTERNAL_SERVER_ERROR,
+                    e.getMessage());
+        }
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<Response<User>> loginUsuario(@RequestBody LoginRequestDTO loginRequest) {
+        try {
+            Optional<User> user = userService.loginUser(loginRequest);
+            return user.map(Response::successResponse)
+                    .orElseGet(() -> Response.errorResponse(HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED,
+                            "Credenciais inválidas"));
         } catch (Exception e) {
             return Response.errorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), HttpStatus.INTERNAL_SERVER_ERROR,
                     e.getMessage());

@@ -5,24 +5,30 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import br.com.usermanage.usermanage.dto.LoginRequestDTO;
 import br.com.usermanage.usermanage.entity.User;
 import br.com.usermanage.usermanage.exception.UserNotFoundException;
 import br.com.usermanage.usermanage.repository.UserRepository;
 
 /**
-* @author gilberto.lima
-*/
+ * @author gilberto.lima
+ */
 
 @Service
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 
+    private final PasswordEncoder passwordEncoder;
+
     @Autowired
-    public UserServiceImpl(UserRepository userRepository){
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -35,9 +41,16 @@ public class UserServiceImpl implements UserService {
         return userRepository.findById(id);
     }
 
+    // @Override
+    // public User createUser(User user) {
+    // user.setDataCriacao(LocalDateTime.now());
+    // return userRepository.save(user);
+    // }
+
     @Override
     public User createUser(User user) {
         user.setDataCriacao(LocalDateTime.now());
+        user.setSenha(passwordEncoder.encode(user.getSenha()));
         return userRepository.save(user);
     }
 
@@ -69,5 +82,14 @@ public class UserServiceImpl implements UserService {
         user.setAtivo(userDetails.isAtivo());
         user.setTelefone(userDetails.getTelefone());
         user.setEndereco(userDetails.getEndereco());
+    }
+
+    @Override
+    public Optional<User> loginUser(LoginRequestDTO loginRequest) {
+        Optional<User> user = userRepository.findByUsername(loginRequest.getUsername());
+        if (user.isPresent() && passwordEncoder.matches(loginRequest.getSenha(), user.get().getSenha())) {
+            return user;
+        }
+        return Optional.empty();
     }
 }
