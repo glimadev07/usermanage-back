@@ -41,7 +41,7 @@ public class User {
     private LocalDateTime dataCriacao;
 
     @Column(nullable = false)
-    private boolean ativo;
+    private Boolean ativo;
 
     @Column(length = 15)
     private String telefone;
@@ -50,6 +50,6 @@ public class User {
     private String endereco;
 
     @Column(length = 255)
-    private String role;
+    private Boolean isMaster;
 
 }

@@ -37,13 +37,16 @@ public class UserDTO {
     private LocalDateTime dataAtualizacao;
 
     @Column(nullable = false)
-    private boolean ativo;
+    private Boolean ativo;
 
     @Column(length = 15)
     private String telefone;
 
     @Column(length = 255)
     private String endereco;
+
+    @Column(nullable = false)
+    private Boolean isMaster;
 
 }
 
