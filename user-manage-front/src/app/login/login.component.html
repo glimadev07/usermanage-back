@@ -1,0 +1,34 @@
+<!-- src/app/login/login.component.html -->
+<div class="flex justify-content-center align-items-center h-screen">
+  <p-card header="Login" class="w-6">
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <div class="p-fluid text-center">
+        <div class="field p-mb-3">
+          <label for="username" class="p-d-block" style="padding-bottom: 5px;">Usuário</label>
+          <input id="username" type="text" pInputText formControlName="username" class="p-d-block" [ngClass]="{ 'p-invalid': submitted && f['username'].errors }">
+          <div *ngIf="submitted && f['username'].errors" class="p-error">
+            <small *ngIf="f['username'].errors['required']">nome do usuário é obrigatório</small>
+          </div>
+        </div>
+        <div class="field p-mb-3">
+          <label for="senha" class="p-d-block" style="padding-bottom: 5px;">Senha</label>
+          <input id="senha" type="password" pInputText formControlName="senha" class="p-d-block" [ngClass]="{ 'p-invalid': submitted && f['senha'].errors }">
+          <div *ngIf="submitted && f['senha'].errors" class="p-error">
+            <small *ngIf="f['senha'].errors['required']">Senha é obrigatório</small>
+          </div>
+        </div>
+        <div class="field p-mb-3">
+          <button pButton type="submit" label="Login" icon="pi pi-check" [disabled]="loading" class="p-button-rounded"></button>
+          <img *ngIf="loading" src="loading.gif" alt="Loading..." class="p-ml-2">
+        </div>
+        <div *ngIf="error" class="p-error p-mt-2">{{ error }}</div>
+        <div class="text-center p-mt-2">
+          <a href="javascript:void(0)" (click)="openRegisterForm()">Registrar-se</a>
+        </div>
+      </div>
+    </form>
+  </p-card>
+</div>
+<p-dialog header="Registrar-se" [(visible)]="showRegisterForm" [modal]="true" [style]="{ width: '800px', height: '800px' }" (onHide)="closeRegisterForm()">
+  <app-register-form [visible]="showRegisterForm" (onHide)="closeRegisterForm()"></app-register-form>
+</p-dialog>

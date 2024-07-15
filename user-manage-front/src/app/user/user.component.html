@@ -1,0 +1,72 @@
+<!-- src/app/user/user.component.html -->
+<div class="logout-button-container">
+  <p-splitButton [label]="username" icon="pi pi-user" (onClick)="handleButtonClick()" [model]="items"></p-splitButton>
+</div>
+
+
+<p-card>
+  <div class="confirm-button register-button">
+    <p-button (onClick)="showRegisterUser()" label="Cadastrar"></p-button>
+  </div>
+  <p-table
+    [columns]="cols"
+    [value]="users"
+    [rows]="rows"
+    [totalRecords]="totalRecords"
+    [lazy]="true"
+    (onLazyLoad)="paginate($event)"
+    [tableStyle]="{ 'min-width': '50rem' }"
+  >
+    <ng-template pTemplate="header" let-columns>
+      <tr>
+        <th *ngFor="let col of columns">
+          {{ col.header }}
+        </th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-rowData let-columns="columns">
+      <tr>
+        <td *ngFor="let col of columns">
+          <span *ngIf="col.field !== 'operacoes' && col.field !== 'ativo'">{{ rowData[col.field] }}</span>
+          <span *ngIf="col.field === 'ativo'">{{ getAtivoText(rowData[col.field]) }}</span>
+          <span *ngIf="col.field === 'operacoes'" class="operation-buttons">
+            <div class="table-button" style="padding-right: 10px">
+              <p-button (onClick)="showDelete(rowData)" icon="pi pi-trash"></p-button>
+            </div>
+            <div class="table-button">
+              <p-button (onClick)="showUpdateUser(rowData)" icon="pi pi-user-edit"></p-button>
+            </div>
+          </span>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+  <div class="total-records">
+    Total de Registros: {{ totalRecords }}
+  </div>
+  <p-paginator
+    [rows]="rows"
+    [totalRecords]="totalRecords"
+    [rowsPerPageOptions]="[5, 10, 20]"
+    (onPageChange)="paginate($event)">
+  </p-paginator>
+</p-card>
+
+<app-register-form
+  [visible]="showDialogResgiter"
+  (onHide)="showDialogResgiter = false"
+  (confirm)="registerUser($event)"
+></app-register-form>
+
+<app-register-form
+  [visible]="showDialogUpdate"
+  (onHide)="showDialogUpdate = false"
+  (confirm)="updateUser($event)"
+  [user]="userUpdate"
+></app-register-form>
+
+<app-confirm-delete
+  [visible]="showDialogDelete"
+  (onHide)="showDialogDelete = false"
+  (confirm)="confirmDelete()"
+></app-confirm-delete>
