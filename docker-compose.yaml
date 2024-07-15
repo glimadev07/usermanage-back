@@ -8,18 +8,24 @@ services:
     image: postgres:15.3
     hostname: db
     ports:
-      - "5432:5432"
+      - "5433:5433"
     restart: always
     volumes:
       - /var/lib/docker/volumes/usermanage_db:/var/lib/postgresql/data
+    networks:
+      - usermanage-network
 
   adminer:
     container_name: usermanage-adminer
     hostname: adminer
     image: adminer
     restart: always
+    depends_on:
+      - db
     ports:
       - "8081:8080"
+    networks:
+      - usermanage-network
 
   api:
     build:
@@ -31,3 +37,26 @@ services:
     ports:
       - "8080:8080"
     restart: always
+    networks:
+      - usermanage-network
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/${POSTGRES_DB}
+      - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER}
+      - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD}
+
+  front:
+    build:
+      context: user-manage-front
+      dockerfile: Dockerfile
+    container_name: usermanage-front
+    ports:
+      - "4200:4200"
+    restart: always
+    depends_on:
+      - api
+    networks:
+      - usermanage-network
+
+networks:
+  usermanage-network:
+    driver: bridge
