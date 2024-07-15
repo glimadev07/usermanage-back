@@ -36,11 +36,6 @@ out/
 ### VS Code ###
 .vscode/
 
-### Secrets ###
-.env
-src/main/resources/application.properties
-
-
 
 ### IGNORE FRONT-END ###
 
